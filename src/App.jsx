@@ -66,12 +66,12 @@ function App() {
               ></Route>
               <Route path="/start" element={<StartGame />}></Route>
               <Route
-                path="/judge"
-                element={<JudgeGame contractEvents={judgeGames} />}
-              ></Route>
-              <Route
                 path="/join"
                 element={<JoinGame contractEvents={progressGames} />}
+              ></Route>
+              <Route
+                path="/judge"
+                element={<JudgeGame contractEvents={judgeGames} />}
               ></Route>
             </Routes>
           </div>

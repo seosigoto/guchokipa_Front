@@ -48,21 +48,16 @@ const PlayerOneMove = (props) => {
   // const gameIsSelected = game.key === selectedGame;
 
   return (
-    <>
-      <Tooltip title={t("startgame.passwordTooltip", { pwd: game?.hash })}>
-        <Button
-          variant="contained"
-          sx={styles.Button}
-          onClick={() => initGame()}
-          disabled={!isPersistent}
-        >
-          {buttonText}
-        </Button>
-      </Tooltip>
-      {!isPersistent && (
-        <p style={styles.error}>{t("startgame.isNotPersistent")}</p>
-      )}
-    </>
+    <Tooltip title={t("startgame.passwordTooltip", { pwd: game?.hash })}>
+      <Button
+        variant="contained"
+        sx={styles.Button}
+        onClick={() => initGame()}
+        disabled={!isPersistent}
+      >
+        {buttonText}
+      </Button>
+    </Tooltip>
   );
 };
 

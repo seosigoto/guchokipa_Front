@@ -18,7 +18,7 @@ const JudgeMove = (props) => {
   const [{ data: signer }] = useSigner();
 
   const [isPersistent, setIsPersistent] = useState(true);
-  const [buttonText, setButtonText] = useState("Judge Game");
+  const [buttonText, setButtonText] = useState("🔑 Judge Game");
 
   const judge = async () => {
     if (signer) {
@@ -43,7 +43,7 @@ const JudgeMove = (props) => {
         }
 
         setIsPersistent(true);
-        setButtonText(t("startgame.startgameCTA"));
+        setButtonText("🔑 Judge Game");
       } else {
         toast.error("Please insert the hash");
       }

@@ -31,6 +31,8 @@ const styles = {
     width: 600,
     bgcolor: "background.paper",
     height: 200,
+    marginBottom: "20px",
+    display: "inline-table",
   },
   h2: { margin: "50px" },
   h3: { marginBottom: "40px" },

@@ -33,7 +33,7 @@ const StartGame = () => {
   const [{ data: account }] = useAccount();
 
   const initGameData = {
-    hand: "",
+    hand: null,
     hash: "",
   };
   const [gameData, setGameData] = useState(initGameData);

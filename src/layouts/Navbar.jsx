@@ -144,20 +144,30 @@ const Navbar = () => {
               {t("navbar.results")}
             </NavLink>
           </li>
-          {account && account.address.toLowerCase() == contractOwner && (
-            <>
-              <li style={styles.listItem}>
-                <NavLink
-                  to="/start"
-                  style={({ isActive }) =>
-                    isActive ? styles.activeLinkStyles : styles.link
-                  }
-                >
-                  {t("navbar.startgame")}
-                </NavLink>
-              </li>
-            </>
+          {account && account.address.toLowerCase() == contractOwner ? (
+            <li style={styles.listItem}>
+              <NavLink
+                to="/start"
+                style={({ isActive }) =>
+                  isActive ? styles.activeLinkStyles : styles.link
+                }
+              >
+                {t("navbar.startgame")}
+              </NavLink>
+            </li>
+          ) : (
+            <li style={styles.listItem}>
+              <NavLink
+                to="/join"
+                style={({ isActive }) =>
+                  isActive ? styles.activeLinkStyles : styles.link
+                }
+              >
+                {t("navbar.joingame")}
+              </NavLink>
+            </li>
           )}
+
           <li style={styles.listItem}>
             <NavLink
               to="/judge"
@@ -166,16 +176,6 @@ const Navbar = () => {
               }
             >
               Judge
-            </NavLink>
-          </li>
-          <li style={styles.listItem}>
-            <NavLink
-              to="/join"
-              style={({ isActive }) =>
-                isActive ? styles.activeLinkStyles : styles.link
-              }
-            >
-              {t("navbar.joingame")}
             </NavLink>
           </li>
         </ul>

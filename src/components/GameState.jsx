@@ -16,13 +16,12 @@ const GameState = (props) => {
   const { t } = useTranslation();
 
   return (
-    <Tooltip title={`Game ID / hash: ${game?.gameId}`}>
-      <p style={styles.info}>
+    <Tooltip title={`Game ID / hash: ${game?.toeknId}`}>
+      {/* <p style={styles.info}>
         {t("gamestate.info", {
-          gameId: game?.gameId.substr(0, 6),
-          amount: game?.amount,
+          gameId: game?.toeknId,
         })}
-      </p>
+      </p> */}
     </Tooltip>
   );
 };
@@ -31,7 +30,6 @@ export default GameState;
 
 GameState.propTypes = {
   game: PropTypes.shape({
-    amount: PropTypes.string.isRequired,
-    gameId: PropTypes.string.isRequired,
+    gameId: PropTypes.number.isRequired,
   }),
 };

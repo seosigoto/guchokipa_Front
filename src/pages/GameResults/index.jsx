@@ -6,6 +6,8 @@ import GameState from "../../components/GameState";
 import PlayedHand from "../../components/PlayedHand";
 import { getDecidedGames } from "../../utils/game/game-states";
 import GameStats from "../../components/GameStats";
+import { Hands } from "../../constants/hands";
+import { ethers } from "ethers";
 
 const styles = {
   Grid: {
@@ -27,10 +29,16 @@ const styles = {
     width: 600,
     bgcolor: "background.paper",
     height: 200,
-    marginBottom: "150px",
+    marginBottom: "100px",
   },
   h2: { margin: "50px" },
   gameStatus: { paddingTop: "10px" },
+  handPlaceholder: {
+    fontSize: "50px",
+    minHeight: "80px",
+    minWidth: "80px",
+    paddingTop: "15px",
+  },
 };
 
 const GameResults = (props) => {
@@ -65,27 +73,70 @@ const GameResults = (props) => {
   //     setAllGameData(openGameRounds);
   //   }
   // };
-
+  let ownerhand;
+  const Zeroaddress = "0x0000000000000000000000000000000000000000";
   const renderDecidedGames = (game) => {
+    console.log(game);
+
+    let gplayer = game?.player;
+
+    let feeweiValue = ethers.BigNumber.from(game?.pFee);
+    let feeetherValue = ethers.utils.formatEther(feeweiValue);
+
+    if (game?.winner == Zeroaddress) {
+      ownerhand = game?.playerHand;
+    } else if (game?.winner == game?.owner) {
+      if (game?.playerHand == 0) {
+        ownerhand = 2;
+      } else if (game?.playerHand == 1) {
+        ownerhand = 0;
+      } else if (game?.playerHand == 2) {
+        ownerhand = 1;
+      }
+    } else if (game?.winner == gplayer) {
+      if (game?.playerHand == 0) {
+        ownerhand = 1;
+      } else if (game?.playerHand == 1) {
+        ownerhand = 2;
+      } else if (game?.playerHand == 2) {
+        ownerhand = 0;
+      }
+    }
     return (
-      <Box key={game?.gameId} sx={styles.Box}>
+      <Box key={game?.tokenId} sx={styles.Box}>
         <Paper elevation={3}>
           <div style={styles.gameStatus}>
-            <h3>{game?.result}</h3>
+            <h3>
+              {game?.winner === game?.owner ? (
+                <div>Owner Wins Fee: {feeetherValue} Eth</div>
+              ) : game?.winner === gplayer ? (
+                <div>Player Wins Fee: {feeetherValue} Eth</div>
+              ) : (
+                <div>Draw ! Fee: {feeetherValue} Eth</div>
+              )}
+            </h3>
             <GameState game={game} />
           </div>
           <Grid container sx={styles.Grid}>
             <Grid item xs={6} sx={styles.GridItem}>
+              {/* hand={game?.playerHand} */}
+              <div style={styles.handPlaceholder}>
+                {ownerhand != undefined ? Hands[ownerhand].icon : "❓"}
+              </div>
               <PlayedHand
-                player={game?.player1}
-                hand={game?.handPlayer1}
+                player={game?.owner}
                 name={t("gameresults.firstplayer")}
               />
             </Grid>
             <Grid item xs={6} sx={styles.GridItem}>
+              <div style={styles.handPlaceholder}>
+                {game?.playerHand != undefined
+                  ? Hands[game?.playerHand].icon
+                  : "❓"}
+              </div>
               <PlayedHand
-                player={game?.player2}
-                hand={game?.handPlayer2}
+                player={gplayer}
+                // hand={game?.playerHand}
                 name={t("gameresults.secondplayer")}
               />
             </Grid>
@@ -101,14 +152,14 @@ const GameResults = (props) => {
       const game = allGameData[i];
       results.push(renderDecidedGames(game));
       if (i === allGameData?.length - 1) break;
-      results;
+      // results;
     }
   }
 
   return (
     <Container maxWidth="sm" sx={styles.Container}>
-      <h2 style={styles.h2}>{t("gameresults.title")}</h2>
-      <GameStats allGames={allGameData} />
+      {/* <h2 style={styles.h2}>{t("gameresults.title")}</h2>
+      <GameStats allGames={allGameData} /> */}
       {results}
     </Container>
   );

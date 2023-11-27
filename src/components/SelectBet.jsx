@@ -32,7 +32,7 @@ export const SelectBet = (props) => {
   function handleBetData(event) {
     setBet({
       ...betData,
-      hash: event?.target?.value.toString(),
+      hash: event?.target?.value.toString().trim(),
     });
   }
 

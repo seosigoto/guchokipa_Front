@@ -69,7 +69,7 @@ const JoinGame = (props) => {
       if (gameItem.tokenId == tokenId) {
         newGameData.push({
           ...gameItem,
-          hand: hashStr,
+          hand: hashStr.toString().trim(),
         });
       } else {
         newGameData.push(gameItem);

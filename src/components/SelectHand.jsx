@@ -32,7 +32,7 @@ export const SelectHand = (props) => {
   function handleDelete() {
     setBet({
       ...gameData,
-      hand: "",
+      hand: null,
     });
   }
 
@@ -51,28 +51,25 @@ export const SelectHand = (props) => {
     <>
       <h3>{t("selecthand.title")}</h3>
       <Stack direction="row" alignItems="center" spacing={2} sx={styles.margin}>
-        {Hands.map(
-          (hand, index) =>
-            !!index && (
-              <IconButton
-                color="primary"
-                variant="contained"
-                sx={
-                  gameData?.hand == index
-                    ? styles.activeHandIcon
-                    : styles.handIcon
-                }
-                onClick={handleSelectHand}
-                name={hand.value}
-                aria-label="hand"
-                key={hand.name}
-              >
-                {hand.icon}
-              </IconButton>
-            )
-        )}
+        {Hands.map((hand) => (
+          <IconButton
+            color="primary"
+            variant="contained"
+            sx={
+              gameData?.hand == hand.value
+                ? styles.activeHandIcon
+                : styles.handIcon
+            }
+            onClick={handleSelectHand}
+            name={hand.value}
+            aria-label="hand"
+            key={hand.name}
+          >
+            {hand.icon}
+          </IconButton>
+        ))}
       </Stack>
-      {!!gameData?.hand && (
+      {gameData?.hand != null && (
         <Chip
           color="primary"
           label={t(`selecthand.${Hands[gameData.hand]?.name}`)}

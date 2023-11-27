@@ -17,6 +17,7 @@ const styles = {
   playerAvatar: {
     backgroundColor: "#ffffff",
     fontSize: "16px",
+    margin: "10px",
   },
 };
 

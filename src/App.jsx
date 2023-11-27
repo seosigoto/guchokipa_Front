@@ -7,23 +7,20 @@ import Navbar from "./layouts/Navbar";
 import Footer from "./layouts/Footer";
 import JoinGame from "./pages/JoinGame";
 import StartGame from "./pages/StartGame";
-// import Home from "./pages/Home";
-import RunningGames from "./pages/RunningGames";
-import EventListener from "./components/EventListener";
+import JudgeGame from "./pages/JudgeGame";
 import GameResults from "./pages/GameResults";
 
 import { GAME_STATUS } from "./utils/constants";
 import { getGames } from "./utils/contracts/gameContract";
 
 function App() {
+  const [judgeGames, setJudgeGames] = useState([]);
   const [completeGames, setCompleteGames] = useState([]);
   const [progressGames, setProgressGames] = useState([]);
 
   useEffect(() => {
     const fetchGames = async () => {
       const gameArr = await getGames();
-
-      console.log(gameArr);
 
       if (gameArr.length > 0) {
         let completedGames = [],
@@ -32,14 +29,14 @@ function App() {
           const gameInfo = gameArr[ii];
           if (gameInfo.status == GAME_STATUS.COMPLETED) {
             completedGames.push(gameInfo);
-          } else if (gameInfo.status != GAME_STATUS.NOT_INITIALIZED) {
+          } else if (gameInfo.status == GAME_STATUS.INITIALIZED) {
             progressingGames.push(gameInfo);
+          } else if (gameInfo.status == GAME_STATUS.IN_PROGRESS) {
+            judgeGames.push(gameInfo);
           }
         }
 
-        console.log(completeGames);
-        console.log(progressingGames);
-
+        setJudgeGames(judgeGames);
         setCompleteGames(completedGames);
         setProgressGames(progressingGames);
       }
@@ -63,32 +60,23 @@ function App() {
           <div style={styles.mainContent}>
             <Navbar />
             <Routes>
-              {/* <Route path="/" element={<Home />}></Route> */}
               <Route
                 path="/"
                 element={<GameResults contractEvents={completeGames} />}
               ></Route>
-              <Route path="/start-game" element={<StartGame />}></Route>
-              {/* <Route
-                path="/join-game"
-                element={<JoinGame contractEvents={contractEvents} />}
-              ></Route> */}
+              <Route path="/start" element={<StartGame />}></Route>
               <Route
-                path="/running-games"
+                path="/judge"
+                element={<JudgeGame contractEvents={judgeGames} />}
+              ></Route>
+              <Route
+                path="/join"
                 element={<JoinGame contractEvents={progressGames} />}
               ></Route>
-              {/* <Route
-                path="/game-results"
-                element={<GameResults contractEvents={contractEvents} />}
-              ></Route> */}
             </Routes>
           </div>
-          <Footer />
+          {/* <Footer /> */}
         </div>
-        {/* <EventListener
-          contractEvents={contractEvents}
-          setContractEvents={setContractEvents}
-        /> */}
       </Router>
     </Suspense>
   );

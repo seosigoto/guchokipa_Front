@@ -27,12 +27,12 @@ const PlayedHand = (props) => {
 
   return player ? (
     <div>
-      <div style={styles.handPlaceholder}>{hand ? Hands[hand].icon : "❓"}</div>
+      {/* <div style={styles.handPlaceholder}>{hand ? Hands[hand].icon : "❓"}</div> */}
       <PlayerAvatar account={player} name={namePersonalized} />
     </div>
   ) : (
     <div>
-      <div style={styles.handPlaceholder}>🤷‍♂️</div>
+      {/* <div style={styles.handPlaceholder}>🤷‍♂️</div> */}
       <PlayerAvatar name={t("playedhand.nobody")} />
     </div>
   );

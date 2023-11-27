@@ -17,7 +17,7 @@ export const getGames = async () => {
       const gameInfo = await gameContract.gameList(tokenId);
       return gameInfo.pFee == BigNumber.from(0)
         ? null
-        : { ...gameInfo, owner, tokenId };
+        : { ...gameInfo, owner, tokenId, hand: null };
     })
   );
 
@@ -53,7 +53,7 @@ export const createGame = async (signer, hand, hash) => {
     console.log(err);
     return {
       status: false,
-      message: JSON.stringify(err),
+      message: "Create Game Tx Failed",
     };
   }
 };
@@ -62,7 +62,7 @@ export const joinGame = async (signer, gameId, hand) => {
   try {
     const gameInfo = await gameContract.gameList(gameId);
 
-    const tx = await gameContract.connect(signer).join( gameId, hand,{
+    const tx = await gameContract.connect(signer).join(gameId, hand, {
       value: gameInfo.pFee,
     });
     await tx.wait();
@@ -75,15 +75,16 @@ export const joinGame = async (signer, gameId, hand) => {
     console.log(err);
     return {
       status: false,
-      message: JSON.stringify(err),
+      message: "Join Game Tx Failed",
     };
   }
 };
-
 
 export const judgeGame = async (signer, gameId, hash) => {
   try {
-    const tx = await gameContract.connect(signer).judge( gameId, hash,);
+    const tx = await gameContract
+      .connect(signer)
+      .judge(gameId, utils.formatBytes32String(hash));
     await tx.wait();
 
     return {
@@ -94,15 +95,16 @@ export const judgeGame = async (signer, gameId, hash) => {
     console.log(err);
     return {
       status: false,
-      message: JSON.stringify(err),
+      message: "Judge Game Tx Failed",
     };
   }
 };
-
 
 export const judgeGameWithHand = async (signer, gameId, hand, hash) => {
   try {
-    const tx = await gameContract.connect(signer).judgeWithHand( gameId, hand, hash,);
+    const tx = await gameContract
+      .connect(signer)
+      .judgeWithHand(gameId, hand, hash);
     await tx.wait();
 
     return {
@@ -113,14 +115,14 @@ export const judgeGameWithHand = async (signer, gameId, hand, hash) => {
     console.log(err);
     return {
       status: false,
-      message: JSON.stringify(err),
+      message: "Join Game With Hand Tx Failed",
     };
   }
 };
 
-export const cancelGame = async (signer, gameId,) => {
+export const cancelGame = async (signer, gameId) => {
   try {
-    const tx = await gameContract.connect(signer).cancel( gameId, );
+    const tx = await gameContract.connect(signer).cancel(gameId);
     await tx.wait();
 
     return {
@@ -131,7 +133,7 @@ export const cancelGame = async (signer, gameId,) => {
     console.log(err);
     return {
       status: false,
-      message: JSON.stringify(err),
+      message: "Cancel Game Tx Failed",
     };
   }
 };

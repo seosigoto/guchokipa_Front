@@ -2,13 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import PropTypes from "prop-types";
-import { Container, Grid, Paper, Box, Chip } from "@mui/material";
-import { SelectHand } from "../../components/SelectHand";
+import { Container, Grid, Paper, Box, TextField } from "@mui/material";
 import PlayedHand from "../../components/PlayedHand";
 import PlaceholderGame from "../../components/PlaceholderGame";
-import PlayerTwoMove from "./PlayerTwoMove";
-import { getOwner } from "../../utils/contracts/gameContract";
-import Cancel from "./Cancel";
+import JudgeMove from "./JudgeMove";
 
 const styles = {
   Grid: {
@@ -31,6 +28,13 @@ const styles = {
     width: 600,
     bgcolor: "background.paper",
     height: 200,
+  },
+  inputField: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    height: "100%",
   },
   h2: { margin: "50px" },
   h3: { marginBottom: "40px" },
@@ -58,33 +62,15 @@ const JoinGame = (props) => {
   }, [contractEvents]);
 
   const [gameData, setGameData] = useState([]);
-  const [contractOwner, setContractOwner] = useState("");
 
-  useEffect(() => {
-    const initOwner = async () => {
-      const ownerAddr = await getOwner();
-      setContractOwner(ownerAddr);
-    };
-
-    initOwner();
-  }, []);
-
-  // const lookupGames = () => {
-  //   if (contractEvents.Registered.length > 0) {
-  //     const openGameRounds = getOpenGames(
-  //       contractEvents.Registered,
-  //       contractEvents.NewGame,
-  //       contractEvents.GameDecided
-  //     );
-  //     setGameData(openGameRounds);
-  //   }
-  // };
-
-  const setBet = (changedGameData) => {
+  const setBet = (tokenId, hashStr) => {
     let newGameData = [];
     for (const gameItem of gameData) {
-      if (gameItem.tokenId == changedGameData.tokenId) {
-        newGameData.push(changedGameData);
+      if (gameItem.tokenId == tokenId) {
+        newGameData.push({
+          ...gameItem,
+          hand: hashStr,
+        });
       } else {
         newGameData.push(gameItem);
       }
@@ -93,55 +79,42 @@ const JoinGame = (props) => {
     setGameData(newGameData);
   };
 
-  // const setTimeoutIsOver = (key) => {
-  //   let updatedGameData = [...gameData];
-  //   updatedGameData[key].timeoutIsOver = true;
-  //   setGameData(updatedGameData);
-  // };
-
-  const isOwner =
-    account && contractOwner.toLowerCase() == account.address.toLowerCase();
-
   const renderOpenGames = (game) => {
     return (
       <>
         <Grid container sx={styles.Grid}>
           <Grid item xs={6} sx={styles.GridItem}>
-            <PlayedHand player={game?.owner} name={t("joingame.firstplayer")} />
+            <PlayedHand player={game?.owner} name="Creator" />
+            <PlayedHand player={game?.player} name="Player" />
           </Grid>
           <Grid item xs={6} sx={styles.GridItem}>
-            {isOwner ? (
-              <div style={styles.placeholderPlayer2}>
-                <div style={styles.handPlaceholder}>⏳</div>
-                <Chip
-                  color="info"
-                  label={t("joingame.secondplayer")}
-                  variant="outlined"
-                ></Chip>
-              </div>
-            ) : (
-              account && <SelectHand gameData={game} setBet={setBet} />
-            )}
+            <div style={styles.inputField}>
+              <TextField
+                helperText="Insert game key"
+                size="small"
+                id="filled-basic"
+                label={t("selectbet.inputlabel")}
+                type="text"
+                variant="outlined"
+                value={game.hand ? game.hand : ""}
+                name="amount"
+                onChange={(e) => setBet(game.tokenId, e.target.value)}
+              />
+            </div>
           </Grid>
         </Grid>
-        {isOwner ? (
-          <Cancel game={game} />
-        ) : (
-          account && <PlayerTwoMove game={game} setBet={setBet} />
-        )}
+        {account && <JudgeMove game={game} />}
       </>
     );
   };
 
   return (
     <Container maxWidth="sm" sx={styles.Container}>
-      <h2 style={styles.h2}>{t("joingame.title")}</h2>
+      <h2 style={styles.h2}>Judge Game</h2>
       {gameData.length > 0 ? (
         <h3 style={styles.h3}>
           {gameData.length}
-          {gameData.length === 1
-            ? t("joingame.subtitle1")
-            : t("joingame.subtitle2")}
+          {gameData.length === 1 ? " Judge Game" : " Judge Games"}
         </h3>
       ) : (
         <PlaceholderGame />

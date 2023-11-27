@@ -5,7 +5,6 @@ import { Box, Grid, Container, Paper } from "@mui/material";
 import { SelectBet } from "../../components/SelectBet";
 import { SelectHand } from "../../components/SelectHand";
 import PlayerOneMove from "./PlayerOneMove";
-import { generatePassword } from "../../utils/generatePassword";
 
 const styles = {
   container: {

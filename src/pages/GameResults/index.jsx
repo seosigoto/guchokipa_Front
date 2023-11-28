@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import React from "react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
+import { BigNumber, utils, constants } from "ethers";
 import { Container, Grid, Paper, Box } from "@mui/material";
+
+import { Hands } from "../../constants/hands";
+import { GAME_HANDS } from "../../utils/constants";
 import GameState from "../../components/GameState";
 import PlayedHand from "../../components/PlayedHand";
-import { getDecidedGames } from "../../utils/game/game-states";
-import GameStats from "../../components/GameStats";
-import { Hands } from "../../constants/hands";
-import { ethers } from "ethers";
 
 const styles = {
   Grid: {
@@ -74,34 +74,32 @@ const GameResults = (props) => {
   //   }
   // };
   let ownerhand;
-  const Zeroaddress = "0x0000000000000000000000000000000000000000";
   const renderDecidedGames = (game) => {
-    console.log(game);
-
     let gplayer = game?.player;
 
-    let feeweiValue = ethers.BigNumber.from(game?.pFee);
-    let feeetherValue = ethers.utils.formatEther(feeweiValue);
+    let feeweiValue = BigNumber.from(game?.pFee);
+    let feeetherValue = utils.formatEther(feeweiValue);
 
-    if (game?.winner == Zeroaddress) {
+    if (game?.winner == constants.AddressZero) {
       ownerhand = game?.playerHand;
     } else if (game?.winner == game?.owner) {
-      if (game?.playerHand == 0) {
-        ownerhand = 2;
-      } else if (game?.playerHand == 1) {
-        ownerhand = 0;
-      } else if (game?.playerHand == 2) {
-        ownerhand = 1;
+      if (game?.playerHand == GAME_HANDS.ROCK) {
+        ownerhand = GAME_HANDS.PAPER;
+      } else if (game?.playerHand == GAME_HANDS.SCISSOR) {
+        ownerhand = GAME_HANDS.ROCK;
+      } else if (game?.playerHand == GAME_HANDS.PAPER) {
+        ownerhand = GAME_HANDS.SCISSOR;
       }
     } else if (game?.winner == gplayer) {
-      if (game?.playerHand == 0) {
-        ownerhand = 1;
-      } else if (game?.playerHand == 1) {
-        ownerhand = 2;
-      } else if (game?.playerHand == 2) {
-        ownerhand = 0;
+      if (game?.playerHand == GAME_HANDS.ROCK) {
+        ownerhand = GAME_HANDS.SCISSOR;
+      } else if (game?.playerHand == GAME_HANDS.SCISSOR) {
+        ownerhand = GAME_HANDS.PAPER;
+      } else if (game?.playerHand == GAME_HANDS.PAPER) {
+        ownerhand = GAME_HANDS.ROCK;
       }
     }
+
     return (
       <Box key={game?.tokenId} sx={styles.Box}>
         <Paper elevation={3}>

@@ -144,40 +144,43 @@ const Navbar = () => {
               {t("navbar.results")}
             </NavLink>
           </li>
-          {account && account.address.toLowerCase() == contractOwner ? (
+          {account &&
+            (account.address.toLowerCase() == contractOwner ? (
+              <li style={styles.listItem}>
+                <NavLink
+                  to="/start"
+                  style={({ isActive }) =>
+                    isActive ? styles.activeLinkStyles : styles.link
+                  }
+                >
+                  {t("navbar.startgame")}
+                </NavLink>
+              </li>
+            ) : (
+              <li style={styles.listItem}>
+                <NavLink
+                  to="/join"
+                  style={({ isActive }) =>
+                    isActive ? styles.activeLinkStyles : styles.link
+                  }
+                >
+                  {t("navbar.joingame")}
+                </NavLink>
+              </li>
+            ))}
+
+          {account && (
             <li style={styles.listItem}>
               <NavLink
-                to="/start"
+                to="/judge"
                 style={({ isActive }) =>
                   isActive ? styles.activeLinkStyles : styles.link
                 }
               >
-                {t("navbar.startgame")}
-              </NavLink>
-            </li>
-          ) : (
-            <li style={styles.listItem}>
-              <NavLink
-                to="/join"
-                style={({ isActive }) =>
-                  isActive ? styles.activeLinkStyles : styles.link
-                }
-              >
-                {t("navbar.joingame")}
+                Judge
               </NavLink>
             </li>
           )}
-
-          <li style={styles.listItem}>
-            <NavLink
-              to="/judge"
-              style={({ isActive }) =>
-                isActive ? styles.activeLinkStyles : styles.link
-              }
-            >
-              Judge
-            </NavLink>
-          </li>
         </ul>
       </div>
 
